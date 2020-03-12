@@ -7,6 +7,7 @@ class CPU:
 
     def __init__(self):
         """Construct a new CPU."""
+        #~~~~~~~~~~~~~~~~~~~~~~~~step 1 ~~~~~~~~~~~~~~~~~~~~~~~
         self.ram = [0] * 255 #256 bytes of mem
         self.R0 = 0
         self.R1 = 0
@@ -18,6 +19,15 @@ class CPU:
         self.R7 = 0
         # 8 registers
         self.pc = 0 # program counter
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    #step 2----- MAR-memory address register, MDR- memory data register
+    def ram_read(self, MAR):
+        return self.ram[MAR]
+    
+    def ram_write(self, MAR, MDR):
+        self.ram[MAR] = MDR
+    #------------------------------------------------------------------
 
     def load(self):
         """Load a program into memory."""
