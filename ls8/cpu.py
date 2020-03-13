@@ -8,18 +8,16 @@ class CPU:
     def __init__(self):
         """Construct a new CPU."""
         #~~~~~~~~~~~~~~~~~~~~~~~~step 1 ~~~~~~~~~~~~~~~~~~~~~~~
-        self.ram = [0] * 255 #256 bytes of mem
-        self.R0 = 0
-        self.R1 = 0
-        self.R2 = 0
-        self.R3 = 0
-        self.R4 = 0
-        self.R5 = 0
-        self.R6 = 0
-        self.R7 = 0
-        # 8 registers
+        self.ram = [0] * 256 #256 bytes of mem
+        self.reg = [0] * 8  # 8 registers
         self.pc = 0 # program counter
-        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        #~~~~~~~~~~~~~~~~~~~~~~~~~step 3~~~~~~~~~~~~~~~~~~~~~~~~~~
+        self.instructions = {
+            0b10000010: self.LDI, # LDI R0,8
+            0b00000001: "HLT",
+            0b01000111: self.PRN
+        }
+
 
     #step 2----- MAR-memory address register, MDR- memory data register
     def ram_read(self, MAR):
@@ -80,6 +78,33 @@ class CPU:
 
         print()
 
+    def LDI(self):
+        print("LDI funtion test")
+        reg_address = self.ram_read(self.pc + 1)
+        reg_value = self.ram_read(self.pc + 2)
+        self.reg[reg_address] = reg_value
+        self.pc += 3
+    
+    def PRN(self):
+        self.pc += 1
+        print(f"{self.reg[self.ram[self.pc]]}")
+        print("PC----->", self.pc)
+        self.pc += 1
+    
+    
     def run(self):
         """Run the CPU."""
-        pass
+        # step 3 
+        while True:
+            IR = self.ram[self.pc] #instruction
+            print("before loop", IR)
+            print("on 101", self.pc)
+            if self.instructions[IR] == "HLT":
+                break
+            elif IR in self.instructions:
+                self.instructions[IR]()
+                # self.pc += 1 
+                print("PC in loop----->", self.pc)   
+            else:
+                print(f"Invalid instruction at pc index {self.pc}")
+                sys.exit(1)
